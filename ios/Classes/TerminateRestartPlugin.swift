@@ -73,17 +73,18 @@ public class TerminateRestartPlugin: NSObject, FlutterPlugin {
                 
                 if UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url, options: [:]) { success in
-                        if !success {
+                        if success {
+                            print(" [TerminateRestart] Successfully opened app URL")
+                        } else {
                             print(" [TerminateRestart] Failed to open app URL")
                         }
                     }
                     
                     print(" [TerminateRestart] Terminating app...")
-                    // Force suspend the app
-                    UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
                     
                     // Exit after a delay to ensure URL opening completes
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    // Increased delay to give iOS more time to process the URL
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         exit(0)
                     }
                 } else {
